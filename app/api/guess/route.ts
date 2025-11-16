@@ -2,6 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { getDb } from '@/lib/db';
 
+const CORS_HEADERS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'POST,OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+};
+
 type GuessRequestBody = {
   movie_id?: number | string;
   movieId?: number | string;
@@ -40,7 +46,7 @@ export async function POST(request: NextRequest) {
     if (rawMovieId === undefined || rawMovieId === null) {
       return NextResponse.json(
         { error: 'movie_id is required' },
-        { status: 400 }
+        { status: 400, headers: CORS_HEADERS }
       );
     }
 
@@ -50,7 +56,7 @@ export async function POST(request: NextRequest) {
     if (typeof movieId !== 'number' || Number.isNaN(movieId)) {
       return NextResponse.json(
         { error: 'movie_id must be a valid number' },
-        { status: 400 }
+        { status: 400, headers: CORS_HEADERS }
       );
     }
 
@@ -107,12 +113,17 @@ export async function POST(request: NextRequest) {
 
     const data = rows.map(({ result }: GuessQueryRow) => result);
 
-    return NextResponse.json({ data });
+    return NextResponse.json({ data }, { headers: CORS_HEADERS });
   } catch (error) {
     console.error('[POST /guess] Failed to execute query', error);
     return NextResponse.json(
       { error: 'Failed to process guess request' },
-      { status: 500 }
+      { status: 500, headers: CORS_HEADERS }
     );
   }
+}
+
+export async function OPTIONS() {
+  // Handle CORS preflight
+  return NextResponse.json(null, { status: 204, headers: CORS_HEADERS });
 }
