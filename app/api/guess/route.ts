@@ -69,22 +69,22 @@ export async function POST(request: NextRequest) {
         )
         select json_build_object(
           'movie_id', json_build_object(
-            'value', ((g.movie_id).value)::int,
+            'value', ((g.movie_id).value)::bigint,
             'status', (g.movie_id).status
           ),
           'title', to_jsonb(g.title),
           'release_date', to_jsonb(g.release_date),
           'duration_minutes', json_build_object(
-            'value', ((g.duration_minutes).value)::int,
+            'value', ((g.duration_minutes).value)::bigint,
             'status', (g.duration_minutes).status
           ),
           'rating', to_jsonb(g.rating),
           'budget', json_build_object(
-            'value', ((g.budget).value)::int,
+            'value', ((g.budget).value)::bigint,
             'status', (g.budget).status
           ),
           'revenue', json_build_object(
-            'value', ((g.revenue).value)::int,
+            'value', ((g.revenue).value)::bigint,
             'status', (g.revenue).status
           ),
           'genres', (
